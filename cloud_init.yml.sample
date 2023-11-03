@@ -1,0 +1,8 @@
+write_files:
+  - path: /home/user/hello.sh
+    permissions: '0755'
+    owner: user:user
+    content: |
+     echo "Hello world"
+runcmd:
+  - "su -c 'bash -c /home/user/hello.sh' - user"
