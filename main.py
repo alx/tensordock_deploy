@@ -7,12 +7,23 @@ from pathlib import Path
 import logging
 from urllib.parse import urlencode
 import yaml
+import argparse
 
-CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
-with open(Path(CURRENT_PATH, "config.json"), "r") as f:
+parser = argparse.ArgumentParser(description="Read config file path")
+parser.add_argument(
+    "--config",
+    type=str,
+    default="config.json",
+    help="Path to the configuration file"
+)
+parser.add_argument('--delete', action='store_true')
+parser.add_argument('--info', action='store_true')
+args = parser.parse_args()
+
+with open(args.config, "r") as f:
     config = json.load(f)
 
-LOG_FILENAME = Path(CURRENT_PATH, config["log_filename"])
+LOG_FILENAME = config["log_filename"]
 logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s",
     filename=LOG_FILENAME,
@@ -135,9 +146,9 @@ def deploy_machine(host, host_config):
     success = data["success"]
     sleep(1)
 
+    ssh_port = 0
     if success:
         logging.info("Machine deployed")
-        ssh_port = 0
         http_port = 0
         for port in data["port_forwards"]:
 
@@ -145,12 +156,13 @@ def deploy_machine(host, host_config):
                 ssh_port = int(port)
                 logging.info(f"ssh-keygen -f $HOME/.ssh/known_hosts -R '[%s]:%i'" % (data["ip"], ssh_port))
                 logging.info(f"ssh -o StrictHostKeyChecking=accept-new -p %i user@%s" % (ssh_port, data["ip"]))
+                logging.info(f"ssh -o StrictHostKeyChecking=accept-new -p %i user@%s 'sudo tail -f /var/log/cloud-init-output.log'" % (ssh_port, data["ip"]))
 
             if int(data["port_forwards"][port]) in [8888, 5000]:
                 http_port = int(port)
                 logging.info(f"http://%s:%i" % (data["ip"], http_port))
 
-    return success
+    return ssh_port
 
 def info_deploys():
 
@@ -214,36 +226,32 @@ def deploy_node():
     hosts = get_host_nodes()
     host_nodes_keys = hosts["hostnodes"].keys()
 
-    eligible_hosts = []
-
     for key in host_nodes_keys:
         host = hosts["hostnodes"][key]
         logging.debug(host)
         host_config = is_host_eligible(host)
         if host_config:
             host["id"] = key
-            eligible_hosts.append([host, host_config])
+            break
 
-    if len(eligible_hosts) == 0:
-        logging.info("No eligible hosts found")
-        return False
+    if host["id"] is not None:
+        ssh_port = deploy_machine(host, host_config)
 
-    elif len(eligible_hosts) > 1:
-        logging.info("Multiple eligible hosts found")
-        eligible_hosts = sorted(
-            eligible_hosts,
-            key=lambda host, host_config: host_config['priority'],
-            reverse=True
-        )
+        # if ssh_port != 0:
 
-    host, host_config = eligible_hosts[0]
-    success = deploy_machine(host, host_config)
+        #     while True:
+        #         try:
+        #             ssh.connect(ip, username=user, key_filename=key_file)
+        #             break
+        #         except (BadHostKeyException, AuthenticationException, SSHException, socket.error) as e:
+        #             logging.debug(e)
+        #             sleep(2)
 
 if is_api_available():
 
-    if "--delete" in sys.argv:
+    if args.delete:
         delete_deploys()
-    elif "--info" in sys.argv:
+    elif args.info:
         info_deploys()
     else:
         deploy_node()
