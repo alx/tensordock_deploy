@@ -1,5 +1,7 @@
 config.json
+config*.private.json
 cloud_init.yml
+cloud_init*.private.yml
 log.txt
 
 # Byte-compiled / optimized / DLL files
