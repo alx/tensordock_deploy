@@ -32,50 +32,52 @@ Filters by County, Region or City and notifies you via Telegram 🌍.
 
     Example `config.json`:
 
-    ```json
-    {
-  "log_filename": "log.txt",
-  "tensordock": {
-    "api_url": "https://marketplace.tensordock.com",
-    "api_key": "TENSORDOCK_API_KEY",
-    "api_token": "TENSORDOCK_API_TOKEN"
+```json
+{
+    "log_filename": "log.txt",
+    "tensordock": {
+      "api_url": "https://marketplace.tensordock.com",
+      "api_key": "TENSORDOCK API KEY",
+      "api_token": "TENSORDOCK API TOKEN"
   },
   "host_configs": [
-    {
-      "priority": 1,
-      "gpu_count": 1,
-      "gpu_model": "rtxa4000-pcie-16gb",
-      "ram": 16,
-      "vcpus": 4,
-      "hdd": 70,
-      "internal_ports": [
-        22,
-        8888,
-        5000
-      ],
-      "os": "Ubuntu 22.04 LTS",
-      "password": "VM_PASSWORD",
-      "name": "VM_NAME",
-      "cloudinit_file": "cloud_init.yml"
-    },
-    {
-      "priority": 2,
-      "gpu_count": 1,
-      "gpu_model": "geforcertx4090-pcie-24gb",
-      "ram": 16,
-      "vcpus": 4,
-      "hdd": 70,
-      "internal_ports": [
-        22,
-        8888,
-        5000
-      ],
-      "os": "Ubuntu 22.04 LTS",
-      "password": "VM_PASSWORD",
-      "name": "VM_NAME",
-      "cloudinit_file": "cloud_init.yml"
-    }
+  {
+    "priority": 1,
+    "gpu_count": 1,
+    "gpu_model": "rtxa4000-pcie-16gb",
+    "ram": 16,
+    "vcpus": 4,
+    "hdd": 70,
+    "internal_ports": [
+      22,
+      8888,
+      5000
+    ],
+    "os": "Ubuntu 22.04 LTS",
+    "password": "VM PASSWORD",
+    "name": "VM NAME",
+    "cloudinit_file": "cloud_init.yml"
+  },
+  {
+    "priority": 2,
+    "gpu_count": 1,
+    "gpu_model": "geforcertx4090-pcie-24gb",
+    "ram": 16,
+    "vcpus": 4,
+    "hdd": 70,
+    "internal_ports": [
+      22,
+      8888,
+      5000
+    ],
+    "os": "Windows 10",
+    "password": "VM PASSWORD",
+    "name": "VM NAME",
+    "cloudinit_file": "cloud_init.yml"
+  }
   ]
+  }
+```
 
 # Available GPU Flags 🚩
 
