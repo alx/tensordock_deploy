@@ -128,7 +128,7 @@ async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage)
         "a4000": "RTX A4000 16GB",
         "a100": "A100 80GB",
         "l40": "L40 48GB"
-        # Add other GPU types here
+        # Add other GPU types here for custom formatting in telegram notification
     }
 
     formatted_gpu_name = None
