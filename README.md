@@ -104,23 +104,46 @@ Example:
 ```python
 # List of countries
 eligible_countries = [
-    "Poland", "Estonia", "Sweden", "Germany", "Netherlands", 
-    "France", "Luxembourg", "Czech Republic", "CzechRepublic", 
-    "Czech_Republic", "Switzerland", "Austria", "Ukraine", 
-    "Norway", "United_Kingdom", "UK", "United Kingdom", 
-    "Belgium", "Denmark", "Lithuania", "Slovakia", "Hungary", 
-    "Russia", "Italy", "Slovenia", "Finland", "Spain", "Portugal",
+    "Germany", "Poland", "Czech Republic", "Netherlands", "Belgium", 
+    "Denmark", "France", "Switzerland", "Austria", "Luxembourg", 
+    "Sweden", "Slovenia", "Italy", "Hungary", "Slovakia", 
+    "Estonia", "Finland", "United Kingdom", "UK", "United_Kingdom", 
+    "Norway", "Lithuania", "Portugal", "Ukraine", "Russia",
 ]
 
-# Replace 'bot_token' and 'chat_id' with your Telegram Bot token and chat ID
-bot_token = 'YOUR_BOT_TOKEN'
-chat_id = 'YOUR_CHAT_ID'
+
+# Telegram bot details
+bot_token = 'YOUR BOT TOKEN'
+chat_id = '-YOUR CHAT ID'
+bot = Bot(token=bot_token)
 
 async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage):
-    # Customize the message content here
+    gpu_types = {
+        "rtx3090": "RTX 3090 24GB",
+        "rtx3080ti": "RTX 3080 Ti 12GB",
+        "rtx3060ti": "RTX 3060 Ti 8GB",
+        "gtx1070": "GTX 1070 8GB",
+        "rtx4090": "RTX 4090 24GB",
+        "a6000": "RTX A6000 48GB",
+        "a4000": "RTX A4000 16GB",
+        "a100": "A100 80GB",
+        "l40": "L40 48GB"
+        # Add other GPU types here
+    }
+
+    formatted_gpu_name = None
+
+    for gpu_type, formatted_name in gpu_types.items():
+        if gpu_type in gpu_name.lower():
+            formatted_gpu_name = formatted_name
+            break
+
+    if formatted_gpu_name is None:
+        formatted_gpu_name = gpu_name  # Default to the original name if no match is found
+
     message = (
         f"New GPU server deployed\n"
-        f"GPU type: {gpu_name}\n"
+        f"GPU type: {formatted_gpu_name}\n"
         f"GPU quantity: {gpu_quantity}\n"
         f"RAM: {ram} GB\n"
         f"CPU: {cpu} Cores\n"
@@ -129,3 +152,4 @@ async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage)
     )
 
     await bot.send_message(chat_id=chat_id, text=message)
+
