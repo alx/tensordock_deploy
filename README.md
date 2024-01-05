@@ -28,7 +28,7 @@ Filters by County or City and notifies you via Telegram 🌍.
 - Edit `config.json`:
     - Replace `TENSORDOCK_API_KEY`, `TENSORDOCK_API_TOKEN`, `VM_NAME`, and `VM_PASSWORD`.
     - Adjust `host_configs` to set the deployment parameters.
-    - host_configs`[priority]` level allows for the script to choose the nicest setup
+    - host_configs `[priority]` level allows for the script to choose the nicest setup
 
     Example `config.json`:
 
