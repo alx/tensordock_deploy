@@ -10,14 +10,16 @@ import yaml
 import argparse
 from aiogram import Bot, types
 import asyncio
+from plyer import notification
+import webbrowser
 
 # List of countries
 eligible_countries = [
     "Germany", "Poland", "Czech Republic", "CzechRepublic", "Czech_Republic", "Netherlands", "Belgium", 
     "Denmark", "France", "Switzerland", "Austria", "Luxembourg", 
-    "Sweden", "Slovenia", "Italy", "Hungary", "Slovakia", 
+    "Sweden", "Slovenia", "Macedonia", "Italy", "Hungary", "Slovakia", 
     "Estonia", "Finland", "United Kingdom", "UK", "United_Kingdom", 
-    "Norway", "Lithuania", "Portugal", "Ukraine", "Russia",
+    "Norway", "Lithuania", "Portugal", "Ukraine", "Russia", "Spain",
 ]
 
 
@@ -43,6 +45,7 @@ async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage)
         "gtx1070": "GTX 1070 8GB",
         "rtx4090": "RTX 4090 24GB",
         "a6000": "RTX A6000 48GB",
+        "a5000": "RTX A5000 24GB",
         "a4000": "RTX A4000 16GB",
         "a100": "A100 80GB",
         "l40": "L40 48GB"
@@ -74,14 +77,19 @@ async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage)
 
 
 
+def desktop_notification(message):
+    notification_title = "TensorDock Notification"
+    notification_text = message
+    notification_timeout = 10  # Notification will be displayed for 10 seconds
 
-
-
-
-def desktop_notification(message): # Send desktop notification to notify user that a GPU server is available
-    os.system("""
-              osascript -e 'display notification "{}" with title "{}"'
-              """.format(message, "TensorDock GPU Server Available, login at https://marketplace.tensordock.com/list"))
+    notification.notify(
+        title=notification_title,
+        message=notification_text,
+        timeout=notification_timeout,
+        app_icon=None,  # You can specify an icon path if needed
+    )
+# if a GPU is found, open the marketplace page
+    webbrowser.open('https://marketplace.tensordock.com/list')
 
 
 
