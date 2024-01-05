@@ -3,7 +3,8 @@
 Script to deploy VM on marketplace.tensordock.com using API
 
 Now with the ability to filter hosts by their respective Countries and a 60 second timer before retrying to find suitable hosts.
-you could make it even more granular by changing the  "country" attribute to "city" and specifying every desired city.
+
+you can make it even more granular by changing the  "country" attribute to "city" and specifying every desired city.
 
 (when adding countries or cities with a Space inbetween the Name, be sure to add every possible spelling if the node is not on the api yet.)
 
