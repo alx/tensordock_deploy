@@ -2,7 +2,7 @@
 
 Script to deploy a VM on `marketplace.tensordock.com` using API.
 
-Filters by County or City and notifies you via Telegram 🌍.
+Filters by County, Region or City and notifies you via Telegram 🌍.
 
 ## Installation 💻
 
