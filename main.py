@@ -244,7 +244,7 @@ def deploy_node():
                 logging.debug("Machine deployed successfully.")
                 break  # Exit the loop if deployment is successful
         else:
-            logging.debug("No eligible host found in specified countries. Retrying in 60 seconds.")
+            logging.debug("No eligible host found in specified countries / cities. Retrying in 60 seconds.")
             sleep(60)  # Retry after 60 seconds if no eligible host is found in the specified locations
 
 
