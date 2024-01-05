@@ -90,7 +90,7 @@ Filters by County, Region or City and notifies you via Telegram 🌍.
 - `rtxa6000-pcie-48gb` // RTX A6000 48 GB
 
 ## Script Setup | Telegram Integration 📲
-- Add your desired countries or cities
+- Add your desired countries, regions or cities
     - To make sure you don´t miss one of your countries or cities, use every possible spelling.
         - e.g.  UK, United_Kingdom, United Kingdom, UnitedKingdom
      
