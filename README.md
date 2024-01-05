@@ -1,4 +1,4 @@
-# tensordock_deploy
+# tensordock_deploy_CC
 
 Script to deploy VM on marketplace.tensordock.com using API
 
