@@ -42,6 +42,7 @@ Filters by County or City and notifies you via Telegram 🌍.
   },
   "host_configs": [
     {
+      "priority": 1,
       "gpu_count": 1,
       "gpu_model": "rtxa4000-pcie-16gb",
       "ram": 16,
@@ -58,6 +59,7 @@ Filters by County or City and notifies you via Telegram 🌍.
       "cloudinit_file": "cloud_init.yml"
     },
     {
+      "priority": 2,
       "gpu_count": 1,
       "gpu_model": "geforcertx4090-pcie-24gb",
       "ram": 16,
