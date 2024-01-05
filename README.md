@@ -21,7 +21,7 @@ Script to deploy a VM on `marketplace.tensordock.com` using API.
     cp cloud_init.yml.sample cloud_init.yml
     ```
 
-## Configuration
+## VM Configuration
 
 - Edit `config.json`:
     - Replace `TENSORDOCK_API_KEY`, `TENSORDOCK_API_TOKEN`, `VM_NAME`, and `VM_PASSWORD`.
@@ -74,7 +74,11 @@ Script to deploy a VM on `marketplace.tensordock.com` using API.
 }
     ```
 
-## Telegram Integration
+## Script Setup | Telegram Integration
+- Add your desired countries or cities
+    - To make sure you don´t miss one of your countries or cities, use every possible spelling.
+        - e.g.  UK, United_Kingdom, United Kingdom, UnitedKingdom
+     
 
 - To enable Telegram notifications:
     - Replace `bot_token` and `chat_id` variables with your Telegram Bot token and chat ID.
@@ -83,6 +87,16 @@ Script to deploy a VM on `marketplace.tensordock.com` using API.
 Example:
 
 ```python
+# List of countries
+eligible_countries = [
+    "Poland", "Estonia", "Sweden", "Germany", "Netherlands", 
+    "France", "Luxembourg", "Czech Republic", "CzechRepublic", 
+    "Czech_Republic", "Switzerland", "Austria", "Ukraine", 
+    "Norway", "United_Kingdom", "UK", "United Kingdom", 
+    "Belgium", "Denmark", "Lithuania", "Slovakia", "Hungary", 
+    "Russia", "Italy", "Slovenia", "Finland", "Spain", "Portugal",
+]
+
 # Replace 'bot_token' and 'chat_id' with your Telegram Bot token and chat ID
 bot_token = 'YOUR_BOT_TOKEN'
 chat_id = 'YOUR_CHAT_ID'
