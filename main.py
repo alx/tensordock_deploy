@@ -13,17 +13,17 @@ import asyncio
 
 # List of countries
 eligible_countries = [
-    "Poland", "Estonia", "Sweden", "Germany", "Netherlands", 
-    "France", "Luxembourg", "Czech Republic", "CzechRepublic", 
-    "Czech_Republic", "Switzerland", "Austria", "Ukraine", 
-    "Norway", "United_Kingdom", "UK", "United Kingdom", 
-    "Belgium", "Denmark", "Lithuania", "Slovakia", "Hungary", 
-    "Russia", "Italy", "Slovenia", "Finland", "Spain", "Portugal",
+    "Germany", "Poland", "Czech Republic", "CzechRepublic", "Czech_Republic", "Netherlands", "Belgium", 
+    "Denmark", "France", "Switzerland", "Austria", "Luxembourg", 
+    "Sweden", "Slovenia", "Italy", "Hungary", "Slovakia", 
+    "Estonia", "Finland", "United Kingdom", "UK", "United_Kingdom", 
+    "Norway", "Lithuania", "Portugal", "Ukraine", "Russia",
 ]
 
+
 # Telegram bot details
-bot_token = 'BOT TOKEN'
-chat_id = '-CHAT ID'
+bot_token = 'YOUR BOT TOKEN'
+chat_id = 'YOUR CHAT ID'
 bot = Bot(token=bot_token)
 
 async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage):
@@ -37,7 +37,7 @@ async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage)
         "a4000": "RTX A4000 16GB",
         "a100": "A100 80GB",
         "l40": "L40 48GB"
-        # Add other GPU types here
+        # Add other GPU types here for custom formatting in telegram notification
     }
 
     formatted_gpu_name = None
