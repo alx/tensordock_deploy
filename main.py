@@ -21,10 +21,19 @@ eligible_countries = [
 ]
 
 
-# Telegram bot details
+# Telegram bot details, if empty, no notification will be sent
 bot_token = 'YOUR BOT TOKEN'
 chat_id = 'YOUR CHAT ID'
-bot = Bot(token=bot_token)
+
+if bot_token.strip() and ' ' not in bot_token and chat_id.strip() and ' ' not in chat_id:
+    print('Telegram bot enabled\n\n')
+    wait = input('Press enter to continue...')
+    bot = Bot(token=bot_token)
+elif bot_token=='YOUR BOT TOKEN' and chat_id=='YOUR CHAT ID':
+    print('Telegram bot disabled, please set your bot token and chat id\n\n')
+    wait = input('Press enter to continue...')
+    exit()
+
 
 async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage):
     gpu_types = {
@@ -51,7 +60,7 @@ async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage)
         formatted_gpu_name = gpu_name  # Default to the original name if no match is found
 
     message = (
-        f"New GPU server deployed\n"
+        f"New GPU server deployed in {location}\n"
         f"GPU type: {formatted_gpu_name}\n"
         f"GPU quantity: {gpu_quantity}\n"
         f"RAM: {ram} GB\n"
