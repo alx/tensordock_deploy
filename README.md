@@ -71,8 +71,7 @@ Script to deploy a VM on `marketplace.tensordock.com` using API.
       "cloudinit_file": "cloud_init.yml"
     }
   ]
-}
-    ```
+
 
 ## Script Setup | Telegram Integration
 - Add your desired countries or cities
