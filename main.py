@@ -222,17 +222,31 @@ def delete_deploys():
         )
         sleep(1)
 
+# Modify the deploy_node() function to focus on specific locations
 def deploy_node():
-    hosts = get_host_nodes()
-    host_nodes_keys = hosts["hostnodes"].keys()
+    while True:
+        hosts = get_host_nodes()
+        host_nodes_keys = hosts["hostnodes"].keys()
 
-    for key in host_nodes_keys:
-        host = hosts["hostnodes"][key]
-        logging.debug(host)
-        host_config = is_host_eligible(host)
-        if host_config:
-            host["id"] = key
-            break
+        chosen_host = None
+        for key in host_nodes_keys:
+            host = hosts["hostnodes"][key]
+            if host["location"]["country"] in ["Poland", "Estonia", "Sweden", "Germany", "Netherlands", "France", "Luxembourg", "Czech Republic", "CzechRepublic", "Czech_Republic", "Switzerland", "Austria", "Ukraine", "Norway", "United_Kingdom", "UK", "United Kingdom", "Belgium", "Denmark", "Lithuania", "Slovakia", "Hungary", "Russia", "Italy", "Slovenia"]:
+                host_config = is_host_eligible(host)
+                if host_config:
+                    host["id"] = key
+                    chosen_host = host
+                    break
+
+        if chosen_host:
+            ssh_port = deploy_machine(chosen_host, host_config)
+            if ssh_port != 0:
+                logging.debug("Machine deployed successfully.")
+                break  # Exit the loop if deployment is successful
+        else:
+            logging.debug("No eligible host found in specified countries. Retrying in 60 seconds.")
+            sleep(60)  # Retry after 60 seconds if no eligible host is found in the specified locations
+
 
     if host["id"] is not None:
         ssh_port = deploy_machine(host, host_config)
@@ -248,13 +262,11 @@ def deploy_node():
         #             sleep(2)
 
 if is_api_available():
-
     if args.delete:
         delete_deploys()
     elif args.info:
         info_deploys()
     else:
         deploy_node()
-
 else:
     logging.info("API not available")
