@@ -29,6 +29,10 @@ In `config.json`, replace `TENSORDOCK_API_KEY`, `TENSORDOCK_API_TOKEN`, `VM_NAME
 
 `host_configs[priority]` level allow script to choose the nicest setup
 
+## customize your country list and  reload timer
+
+simply edit line 234 and 248. :)
+
 ## run
 
 ### start a new VM
