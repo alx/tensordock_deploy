@@ -1,92 +1,83 @@
-# tensordock_deploy_CC
+# `tensordock_deploy_CC`
 
-Script to deploy VM on marketplace.tensordock.com using API
+Script to deploy a VM on `marketplace.tensordock.com` using API.
 
-Now with the ability to filter hosts by their respective Countries and a 60 second timer before retrying to find suitable hosts.
+## Installation
 
-you can make it even more granular by changing the  "country" attribute to "city" and specifying every desired city.
+1. Clone the repository:
 
-(when adding countries or cities with a Space inbetween the Name, be sure to add every possible spelling if the node is not on the api yet.)
+    ```sh
+    git clone https://github.com/alx/tensordock_deploy.git
+    cd tensordock_deploy
+    ```
 
-e.g. "UK", "United Kingdom", "United_Kingdom"
+2. Set up the environment:
 
-this will ensure that the script can find new hostnodes as soon as they become available.
+    ```sh
+    python3 -m venv .venv && source .venv/bin/activate
+    pip install -r requirements.txt
 
-## install
+    cp config.json.sample config.json
+    cp cloud_init.yml.sample cloud_init.yml
+    ```
 
-``` sh
-git clone https://github.com/alx/tensordock_deploy.git
-cd tensordock_deploy
+## Configuration
 
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+- Edit `config.json`:
+    - Replace `TENSORDOCK_API_KEY`, `TENSORDOCK_API_TOKEN`, `VM_NAME`, and `VM_PASSWORD`.
+    - Adjust `host_configs` to set the deployment parameters.
 
-cp config.json.sample config.json
-cp clound_init.yml. sample cloud_init.yml
-```
+    Example `config.json`:
 
-## config
+    ```json
+    {
+      "tensordock": {
+        "api_key": "YOUR_API_KEY",
+        "api_token": "YOUR_API_TOKEN",
+        "api_url": "https://marketplace.tensordock.com"
+      },
+      "VM_NAME": "Your_VM_Name",
+      "VM_PASSWORD": "Your_VM_Password",
+      "host_configs": [
+        {
+          "priority": 1,
+          "ram": 16,
+          "hdd": 200,
+          "gpu_model": "RTX 3090",
+          "gpu_count": 1,
+          "vcpus": 4,
+          "internal_ports": [22, 80],
+          "password": "Your_VM_Password",
+          "os": "ubuntu",
+          "cloudinit_file": "path/to/cloud-init-file.yml"
+        }
+      ]
+    }
+    ```
 
-In `config.json`, replace `TENSORDOCK_API_KEY`, `TENSORDOCK_API_TOKEN`, `VM_NAME` and `VM_PASSWORD`
+## Telegram Integration
 
-`host_configs[priority]` level allow script to choose the nicest setup
+- To enable Telegram notifications:
+    - Replace `bot_token` and `chat_id` variables with your Telegram Bot token and chat ID.
+    - Use the `async def send_notification()` function to customize the message content and triggers.
 
-## customize your country list and  reload timer
+Example:
 
-simply edit line 234 and 248. :)
+```python
+# Replace 'bot_token' and 'chat_id' with your Telegram Bot token and chat ID
+bot_token = 'YOUR_BOT_TOKEN'
+chat_id = 'YOUR_CHAT_ID'
 
-## run
+async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage):
+    # Customize the message content here
+    message = (
+        f"New GPU server deployed\n"
+        f"GPU type: {gpu_name}\n"
+        f"GPU quantity: {gpu_quantity}\n"
+        f"RAM: {ram} GB\n"
+        f"CPU: {cpu} Cores\n"
+        f"Storage: {storage} GB SSD\n"
+        f"Login at https://marketplace.tensordock.com/list"
+    )
 
-### start a new VM
-
-``` sh
-python3 main.py
-```
-
-### delete running VM
-
-``` sh
-python3 main.py --delete
-```
-
-### get info on running VM
-
-``` sh
-python3 main.py --info
-```
-
-## examples
-
-### Real-Time-Latent-Consistency-Model
-
-```sh
-cd tensordock_deploy
-cp config.rtlcm.json config.json
-cp cloud-init.rtlcm.yml cloud-init.yml
-```
-
-1. Edit `config.json` with Tensordock marketplace API tokens from https://marketplace.tensordock.com/api
-2. Edit `config.json` to change `VM_NAME` and `VM_PASSWORD`
-3. Edit `cloud-init.yml` with Tailscale `authkey` with ephemeral+reusable key issued from https://login.tailscale.com/admin/settings/keys
-
-```sh
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python3 main.py
-```
-
-Wait for `cloud-init` to finish VM setup:
-
-```sh
-ssh -o StrictHostKeyChecking=accept-new -p SSH_PORT user@MACHINE_IP 'sudo tail -f /var/log/cloud-init-output.log'"
-```
-
-Connect to machine VM using ssh and fix ssl port in `$HOME/rtlcm/main.py`:
-
-```sh
-ssh -o StrictHostKeyChecking=accept-new -p SSH_PORT user@MACHINE_IP
-$ nano rtlcm/main.py
-$ killall python3
-$ source /home/user/.venv/bin/activate && python3 /home/user/rtlcm/main.py 
-```
-
+    await bot.send_message(chat_id=chat_id, text=message)
