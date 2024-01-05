@@ -31,28 +31,47 @@ Script to deploy a VM on `marketplace.tensordock.com` using API.
 
     ```json
     {
-      "tensordock": {
-        "api_key": "YOUR_API_KEY",
-        "api_token": "YOUR_API_TOKEN",
-        "api_url": "https://marketplace.tensordock.com"
-      },
-      "VM_NAME": "Your_VM_Name",
-      "VM_PASSWORD": "Your_VM_Password",
-      "host_configs": [
-        {
-          "priority": 1,
-          "ram": 16,
-          "hdd": 200,
-          "gpu_model": "RTX 3090",
-          "gpu_count": 1,
-          "vcpus": 4,
-          "internal_ports": [22, 80],
-          "password": "Your_VM_Password",
-          "os": "ubuntu",
-          "cloudinit_file": "path/to/cloud-init-file.yml"
-        }
-      ]
+  "log_filename": "log.txt",
+  "tensordock": {
+    "api_url": "https://marketplace.tensordock.com",
+    "api_key": "TENSORDOCK_API_KEY",
+    "api_token": "TENSORDOCK_API_TOKEN"
+  },
+  "host_configs": [
+    {
+      "gpu_count": 1,
+      "gpu_model": "rtxa4000-pcie-16gb",
+      "ram": 16,
+      "vcpus": 4,
+      "hdd": 70,
+      "internal_ports": [
+        22,
+        8888,
+        5000
+      ],
+      "os": "Ubuntu 22.04 LTS",
+      "password": "VM_PASSWORD",
+      "name": "VM_NAME",
+      "cloudinit_file": "cloud_init.yml"
+    },
+    {
+      "gpu_count": 1,
+      "gpu_model": "geforcertx4090-pcie-24gb",
+      "ram": 16,
+      "vcpus": 4,
+      "hdd": 70,
+      "internal_ports": [
+        22,
+        8888,
+        5000
+      ],
+      "os": "Ubuntu 22.04 LTS",
+      "password": "VM_PASSWORD",
+      "name": "VM_NAME",
+      "cloudinit_file": "cloud_init.yml"
     }
+  ]
+}
     ```
 
 ## Telegram Integration
