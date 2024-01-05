@@ -8,6 +8,74 @@ import logging
 from urllib.parse import urlencode
 import yaml
 import argparse
+from aiogram import Bot, types
+import asyncio
+
+# List of countries
+eligible_countries = [
+    "Poland", "Estonia", "Sweden", "Germany", "Netherlands", 
+    "France", "Luxembourg", "Czech Republic", "CzechRepublic", 
+    "Czech_Republic", "Switzerland", "Austria", "Ukraine", 
+    "Norway", "United_Kingdom", "UK", "United Kingdom", 
+    "Belgium", "Denmark", "Lithuania", "Slovakia", "Hungary", 
+    "Russia", "Italy", "Slovenia", "Finland", "Spain", "Portugal",
+]
+
+# Telegram bot details
+bot_token = '6934612702:AAHhqQ7ex_pHQDoPdldyBHNnEG0OVUlAGK8'
+chat_id = '-4051076595'
+bot = Bot(token=bot_token)
+
+async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage):
+    gpu_types = {
+        "rtx3090": "RTX 3090 24GB",
+        "rtx3080ti": "RTX 3080 Ti 12GB",
+        "rtx3060ti": "RTX 3060 Ti 8GB",
+        "gtx1070": "GTX 1070 8GB",
+        "rtx4090": "RTX 4090 24GB",
+        "a6000": "RTX A6000 48GB",
+        "a4000": "RTX A4000 16GB",
+        "a100": "A100 80GB",
+        "l40": "L40 48GB"
+        # Add other GPU types here
+    }
+
+    formatted_gpu_name = None
+
+    for gpu_type, formatted_name in gpu_types.items():
+        if gpu_type in gpu_name.lower():
+            formatted_gpu_name = formatted_name
+            break
+
+    if formatted_gpu_name is None:
+        formatted_gpu_name = gpu_name  # Default to the original name if no match is found
+
+    message = (
+        f"New GPU server deployed\n"
+        f"GPU type: {formatted_gpu_name}\n"
+        f"GPU quantity: {gpu_quantity}\n"
+        f"RAM: {ram} GB\n"
+        f"CPU: {cpu} Cores\n"
+        f"Storage: {storage} GB SSD\n"
+        f"Login at https://marketplace.tensordock.com/list"
+    )
+
+    await bot.send_message(chat_id=chat_id, text=message)
+
+
+
+
+
+
+
+
+def desktop_notification(message): # Send desktop notification to notify user that a GPU server is available
+    os.system("""
+              osascript -e 'display notification "{}" with title "{}"'
+              """.format(message, "TensorDock GPU Server Available, login at https://marketplace.tensordock.com/list"))
+
+
+
 
 parser = argparse.ArgumentParser(description="Read config file path")
 parser.add_argument(
@@ -222,33 +290,51 @@ def delete_deploys():
         )
         sleep(1)
 
-# Modify the deploy_node() function to focus on specific locations
-def deploy_node():
-    while True:
+while True:
+    try:
         hosts = get_host_nodes()
-        host_nodes_keys = hosts["hostnodes"].keys()
+        logging.debug(f"Available hosts: {hosts}")
 
         chosen_host = None
-        for key in host_nodes_keys:
-            host = hosts["hostnodes"][key]
-            if host["location"]["country"] in ["Poland", "Estonia", "Sweden", "Germany", "Netherlands", "France", "Luxembourg", "Czech Republic", "CzechRepublic", "Czech_Republic", "Switzerland", "Austria", "Ukraine", "Norway", "United_Kingdom", "UK", "United Kingdom", "Belgium", "Denmark", "Lithuania", "Slovakia", "Hungary", "Russia", "Italy", "Slovenia"]:
+        for key, host in hosts["hostnodes"].items():
+            if host["location"]["country"] in eligible_countries:
                 host_config = is_host_eligible(host)
                 if host_config:
                     host["id"] = key
                     chosen_host = host
-                    break
+                    break  # Exit the for loop if an eligible host is found
 
         if chosen_host:
             ssh_port = deploy_machine(chosen_host, host_config)
             if ssh_port != 0:
                 logging.debug("Machine deployed successfully.")
-                break  # Exit the loop if deployment is successful
+                # Check for GPU server and trigger Telegram notification
+                if host_config["gpu_model"]:
+                    location = chosen_host["location"]["country"]
+                    gpu_type = host_config["gpu_model"]
+                    gpu_quantity = host_config["gpu_count"]
+                    ram = host_config["ram"]
+                    cpu = host_config["vcpus"]
+                    storage = host_config["hdd"]
+                    asyncio.run(send_notification(location, gpu_type, gpu_quantity, ram, cpu, storage))
+                    desktop_notification("TensorDock GPU Server Available, login at https://marketplace.tensordock.com/list")
+                break  # Exit the while loop if deployment is successful
         else:
-            logging.debug("No eligible host found in specified countries / cities. Retrying in 60 seconds.")
+            countries_without_eligible_hosts = [host["location"]["country"] for host in hosts["hostnodes"].values()
+                                                if host["location"]["country"] not in eligible_countries]
+            logging.info(f"No GPU server available in eligible countries: {eligible_countries}.")
+
+            logging.debug(f"Retrying in 60 seconds.")
             sleep(60)  # Retry after 60 seconds if no eligible host is found in the specified locations
 
+    except Exception as e:
+        logging.exception(f"An exception occurred: {e}")
+        logging.debug(f"Retrying in 60 seconds.")
+        sleep(60)
 
-    if host["id"] is not None:
+
+
+    if "id" in host and host["id"] is not None:
         ssh_port = deploy_machine(host, host_config)
 
         # if ssh_port != 0:
@@ -261,12 +347,3 @@ def deploy_node():
         #             logging.debug(e)
         #             sleep(2)
 
-if is_api_available():
-    if args.delete:
-        delete_deploys()
-    elif args.info:
-        info_deploys()
-    else:
-        deploy_node()
-else:
-    logging.info("API not available")
