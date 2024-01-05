@@ -2,6 +2,14 @@
 
 Script to deploy VM on marketplace.tensordock.com using API
 
+Now with the ability to filter hosts by their respective Countries and a 60 second timer before retrying to find suitable hosts.
+
+(when adding countries with a Space inbetween the Name, be sure to add every possible spelling if the node is not on the api yet.)
+
+e.g. "UK", "United Kingdom", "United_Kingdom"
+
+this will ensure that the script can find new hostnodes as soon as they become available.
+
 ## install
 
 ``` sh
