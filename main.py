@@ -22,8 +22,8 @@ eligible_countries = [
 ]
 
 # Telegram bot details
-bot_token = '6934612702:AAHhqQ7ex_pHQDoPdldyBHNnEG0OVUlAGK8'
-chat_id = '-4051076595'
+bot_token = 'BOT TOKEN'
+chat_id = '-CHAT ID'
 bot = Bot(token=bot_token)
 
 async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage):
