@@ -1,15 +1,16 @@
-# `tensordock_deploy_CC`
+# `tensordock_deploy_CC` 🚀
 
 Script to deploy a VM on `marketplace.tensordock.com` using API.
-Filters by County or City and notifies you via Telegram.
 
-## Installation
+Filters by County or City and notifies you via Telegram 🌍.
+
+## Installation 💻
 
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/alx/tensordock_deploy.git
-    cd tensordock_deploy
+    git clone https://github.com/ULTRA-VAGUE/tensordock_deploy_CC.git
+    cd tensordock_deploy_CC
     ```
 
 2. Set up the environment:
@@ -22,7 +23,7 @@ Filters by County or City and notifies you via Telegram.
     cp cloud_init.yml.sample cloud_init.yml
     ```
 
-## VM Configuration
+## VM Configuration ⚙️
 
 - Edit `config.json`:
     - Replace `TENSORDOCK_API_KEY`, `TENSORDOCK_API_TOKEN`, `VM_NAME`, and `VM_PASSWORD`.
@@ -73,7 +74,7 @@ Filters by County or City and notifies you via Telegram.
     }
   ]
 
-# Available GPU Flags
+# Available GPU Flags 🚩
 
 - `a100-pcie-80gb` // A100 80 GB
 - `geforcegtx1070-pcie-8gb` // GTX 1070 8 GB
@@ -85,7 +86,7 @@ Filters by County or City and notifies you via Telegram.
 - `rtxa5000-pcie-24gb` // RTX A5000 24 GB
 - `rtxa6000-pcie-48gb` // RTX A6000 48 GB
 
-## Script Setup | Telegram Integration
+## Script Setup | Telegram Integration 📲
 - Add your desired countries or cities
     - To make sure you don´t miss one of your countries or cities, use every possible spelling.
         - e.g.  UK, United_Kingdom, United Kingdom, UnitedKingdom
