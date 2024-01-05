@@ -72,6 +72,17 @@ Script to deploy a VM on `marketplace.tensordock.com` using API.
     }
   ]
 
+# Available GPU Flags
+
+- `a100-pcie-80gb` // A100 80 GB
+- `geforcegtx1070-pcie-8gb` // GTX 1070 8 GB
+- `geforcertx3060ti-pcie-8gb` // RTX 3060 8 GB
+- `geforcertx3090-pcie-24gb` // RTX 3090 24 GB
+- `geforcertx4090-pcie-24gb` // RTX 4090 24 GB
+- `l40-pcie-48gb` // L 40 48GB
+- `rtxa4000-pcie-16gb` // RTX A4000 16 GB
+- `rtxa5000-pcie-24gb` // RTX A5000 24 GB
+- `rtxa6000-pcie-48gb` // RTX A6000 48 GB
 
 ## Script Setup | Telegram Integration
 - Add your desired countries or cities
