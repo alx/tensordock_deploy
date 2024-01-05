@@ -104,7 +104,7 @@ Example:
 ```python
 # List of countries
 eligible_countries = [
-    "Germany", "Poland", "Czech Republic", "Netherlands", "Belgium", 
+    "Germany", "Poland", "Czech Republic", "CzechRepublic", "Czech_Republic", "Netherlands", "Belgium", 
     "Denmark", "France", "Switzerland", "Austria", "Luxembourg", 
     "Sweden", "Slovenia", "Italy", "Hungary", "Slovakia", 
     "Estonia", "Finland", "United Kingdom", "UK", "United_Kingdom", 
