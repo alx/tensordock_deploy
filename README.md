@@ -99,7 +99,7 @@ Filters by County, Region or City and notifies you via Telegram 🌍.
 
     - e.g.  UK, United_Kingdom, United Kingdom, UnitedKingdom
       
-- (Or simply use the Country Extractor to get a ready made list of all your desired countries. (modify this for regions and cities on your own please)
+- (Or simply use the Country Extractor to get a ready made list of all available countries. (modify this for regions and cities on your own please)
 
      
 
