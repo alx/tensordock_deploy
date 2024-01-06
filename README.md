@@ -4,7 +4,7 @@ Script to deploy a VM on `marketplace.tensordock.com` using API.
 
 Filters by County, Region or City and notifies you via Telegram 🌍.
 
-## Installation 💻
+# Installation 💻
 
 1. Clone the repository:
 
@@ -23,7 +23,8 @@ Filters by County, Region or City and notifies you via Telegram 🌍.
     cp cloud_init.yml.sample cloud_init.yml
     ```
 
-## VM Configuration ⚙️
+
+# VM Configuration ⚙️
 
 - Edit `config.json`:
     - Replace `TENSORDOCK_API_KEY`, `TENSORDOCK_API_TOKEN`, `VM_NAME`, and `VM_PASSWORD`.
@@ -79,7 +80,7 @@ Filters by County, Region or City and notifies you via Telegram 🌍.
   }
 ```
 
-# Available GPU Flags 🚩
+## Available GPU Flags 🚩
 
 - `a100-pcie-80gb` // A100 80 GB
 - `geforcegtx1070-pcie-8gb` // GTX 1070 8 GB
@@ -91,7 +92,8 @@ Filters by County, Region or City and notifies you via Telegram 🌍.
 - `rtxa5000-pcie-24gb` // RTX A5000 24 GB
 - `rtxa6000-pcie-48gb` // RTX A6000 48 GB
 
-## Script Setup | Telegram Integration 📲
+
+# Script Setup | Telegram Integration 📲
 - Add your desired countries, regions or cities
     - To make sure you don´t miss one of your countries or cities, use every possible spelling.
         - e.g.  UK, United_Kingdom, United Kingdom, UnitedKingdom
@@ -154,4 +156,14 @@ async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage)
     )
 
     await bot.send_message(chat_id=chat_id, text=message)
+```
+
+## Country Extractor 🌍
+
+The Country Extractor acts as a supplementary script following the initial deployment script's execution, specifically designed to check for new hostnode data automatically.
+
+ Upon its activation, it actively monitors the hostnode data extracted from the main method, to promptly detect any newly added countries.
+
+This ensures an immediate identification of updates. Users can seamlessly integrate these updates into the deployment script by copying and pasting.
+
 
