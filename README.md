@@ -96,7 +96,11 @@ Filters by County, Region or City and notifies you via Telegram 🌍.
 # Script Setup | Telegram Integration 📲
 - Add your desired countries, regions or cities
     - To make sure you don´t miss one of your countries or cities, use every possible spelling.
-        - e.g.  UK, United_Kingdom, United Kingdom, UnitedKingdom
+
+    - e.g.  UK, United_Kingdom, United Kingdom, UnitedKingdom
+      
+- (Or simply use the Country Extractor to get a ready made list of all your desired countries. (modify this for regions and cities on your own please)
+
      
 
 - To enable Telegram notifications:
