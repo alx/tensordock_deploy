@@ -17,7 +17,7 @@ import webbrowser
 eligible_countries = [
     "Germany", "Poland", "Czech Republic", "CzechRepublic", "Czech_Republic", "Netherlands", "Belgium", 
     "Denmark", "France", "Switzerland", "Austria", "Luxembourg", 
-    "Sweden", "Slovenia", "Macedonia", "Italy", "Hungary", "Slovakia", 
+    "Sweden", "Slovenia", "Macedonia", "North Macedonia", "Italy", "Hungary", "Slovakia", 
     "Estonia", "Finland", "United Kingdom", "UK", "United_Kingdom", 
     "Norway", "Lithuania", "Portugal", "Ukraine", "Russia", "Spain",
 ]
@@ -311,6 +311,10 @@ while True:
     try:
         hosts = get_host_nodes()
         logging.debug(f"Available hosts: {hosts}")
+        #save hosts to text file in another folder
+        with open('hosts.txt', 'w') as f:
+            f.write(json.dumps(hosts))
+
 
         chosen_host = None
         for key, host in hosts["hostnodes"].items():
