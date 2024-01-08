@@ -8,6 +8,91 @@ import logging
 from urllib.parse import urlencode
 import yaml
 import argparse
+from aiogram import Bot, types
+import asyncio
+from plyer import notification
+import webbrowser
+
+# List of countries
+eligible_countries = [
+    "Germany", "Poland", "Czech Republic", "CzechRepublic", "Czech_Republic", "Netherlands", "Belgium", 
+    "Denmark", "France", "Switzerland", "Austria", "Luxembourg", 
+    "Sweden", "Slovenia", "Macedonia", "North Macedonia", "Italy", "Hungary", "Slovakia", 
+    "Estonia", "Finland", "United Kingdom", "UK", "United_Kingdom", 
+    "Norway", "Lithuania", "Portugal", "Ukraine", "Russia", "Spain",
+]
+
+
+# Telegram bot details, if empty, no notification will be sent
+bot_token = 'YOUR BOT TOKEN'
+chat_id = 'YOUR CHAT ID'
+
+if bot_token.strip() and ' ' not in bot_token and chat_id.strip() and ' ' not in chat_id:
+    print('Telegram bot enabled\n\n')
+    wait = input('Press enter to continue...')
+    bot = Bot(token=bot_token)
+elif bot_token=='YOUR BOT TOKEN' and chat_id=='YOUR CHAT ID':
+    print('Telegram bot disabled, please set your bot token and chat id\n\n')
+    wait = input('Press enter to continue...')
+    exit()
+
+
+async def send_notification(location, gpu_name, gpu_quantity, ram, cpu, storage):
+    gpu_types = {
+        "rtx3090": "RTX 3090 24GB",
+        "rtx3080ti": "RTX 3080 Ti 12GB",
+        "rtx3060ti": "RTX 3060 Ti 8GB",
+        "gtx1070": "GTX 1070 8GB",
+        "rtx4090": "RTX 4090 24GB",
+        "a6000": "RTX A6000 48GB",
+        "a5000": "RTX A5000 24GB",
+        "a4000": "RTX A4000 16GB",
+        "a100": "A100 80GB",
+        "l40": "L40 48GB"
+        # Add other GPU types here for custom formatting in telegram notification
+    }
+
+    formatted_gpu_name = None
+
+    for gpu_type, formatted_name in gpu_types.items():
+        if gpu_type in gpu_name.lower():
+            formatted_gpu_name = formatted_name
+            break
+
+    if formatted_gpu_name is None:
+        formatted_gpu_name = gpu_name  # Default to the original name if no match is found
+
+    message = (
+        f"New GPU server deployed in {location}\n"
+        f"GPU type: {formatted_gpu_name}\n"
+        f"GPU quantity: {gpu_quantity}\n"
+        f"RAM: {ram} GB\n"
+        f"CPU: {cpu} Cores\n"
+        f"Storage: {storage} GB SSD\n"
+        f"Login at https://marketplace.tensordock.com/list"
+    )
+
+    await bot.send_message(chat_id=chat_id, text=message)
+
+
+
+
+def desktop_notification(message):
+    notification_title = "TensorDock Notification"
+    notification_text = message
+    notification_timeout = 10  # Notification will be displayed for 10 seconds
+
+    notification.notify(
+        title=notification_title,
+        message=notification_text,
+        timeout=notification_timeout,
+        app_icon=None,  # You can specify an icon path if needed
+    )
+# if a GPU is found, open the marketplace page
+    webbrowser.open('https://marketplace.tensordock.com/list')
+
+
+
 
 parser = argparse.ArgumentParser(description="Read config file path")
 parser.add_argument(
@@ -222,19 +307,55 @@ def delete_deploys():
         )
         sleep(1)
 
-def deploy_node():
-    hosts = get_host_nodes()
-    host_nodes_keys = hosts["hostnodes"].keys()
+while True:
+    try:
+        hosts = get_host_nodes()
+        logging.debug(f"Available hosts: {hosts}")
+        #save hosts to text file in another folder
+        with open('hosts.txt', 'w') as f:
+            f.write(json.dumps(hosts))
 
-    for key in host_nodes_keys:
-        host = hosts["hostnodes"][key]
-        logging.debug(host)
-        host_config = is_host_eligible(host)
-        if host_config:
-            host["id"] = key
-            break
 
-    if host["id"] is not None:
+        chosen_host = None
+        for key, host in hosts["hostnodes"].items():
+            if host["location"]["country"] in eligible_countries:
+                host_config = is_host_eligible(host)
+                if host_config:
+                    host["id"] = key
+                    chosen_host = host
+                    break  # Exit the for loop if an eligible host is found
+
+        if chosen_host:
+            ssh_port = deploy_machine(chosen_host, host_config)
+            if ssh_port != 0:
+                logging.debug("Machine deployed successfully.")
+                # Check for GPU server and trigger Telegram notification
+                if host_config["gpu_model"]:
+                    location = chosen_host["location"]["country"]
+                    gpu_type = host_config["gpu_model"]
+                    gpu_quantity = host_config["gpu_count"]
+                    ram = host_config["ram"]
+                    cpu = host_config["vcpus"]
+                    storage = host_config["hdd"]
+                    asyncio.run(send_notification(location, gpu_type, gpu_quantity, ram, cpu, storage))
+                    desktop_notification("TensorDock GPU Server Available, login at https://marketplace.tensordock.com/list")
+                break  # Exit the while loop if deployment is successful
+        else:
+            countries_without_eligible_hosts = [host["location"]["country"] for host in hosts["hostnodes"].values()
+                                                if host["location"]["country"] not in eligible_countries]
+            logging.info(f"No GPU server available in eligible countries: {eligible_countries}.")
+
+            logging.debug(f"Retrying in 60 seconds.")
+            sleep(60)  # Retry after 60 seconds if no eligible host is found in the specified locations
+
+    except Exception as e:
+        logging.exception(f"An exception occurred: {e}")
+        logging.debug(f"Retrying in 60 seconds.")
+        sleep(60)
+
+
+
+    if "id" in host and host["id"] is not None:
         ssh_port = deploy_machine(host, host_config)
 
         # if ssh_port != 0:
@@ -247,14 +368,3 @@ def deploy_node():
         #             logging.debug(e)
         #             sleep(2)
 
-if is_api_available():
-
-    if args.delete:
-        delete_deploys()
-    elif args.info:
-        info_deploys()
-    else:
-        deploy_node()
-
-else:
-    logging.info("API not available")
