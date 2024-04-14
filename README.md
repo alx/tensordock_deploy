@@ -90,6 +90,7 @@ Filters by County, Region or City and notifies you via Telegram 🌍.
 - `v100-sxm2-16gb` // V100 SXM2 16 GB
 
 **Workstation**
+- `adartxa5000-pcie-32gb` // ADA RTX A5000 32 GB
 - `adartxa4000-pcie-20gb` // ADA RTX A4000 20 GB
 - `adartxa4000sff-pcie-20gb` // Small Form Factor ADA RTX A4000 20 GB
 - `rtxa6000-pcie-48gb` // RTX A6000 48 GB
