@@ -82,15 +82,27 @@ Filters by County, Region or City and notifies you via Telegram 🌍.
 
 ## Available GPU Flags 🚩
 
-- `a100-pcie-80gb` // A100 80 GB
-- `geforcegtx1070-pcie-8gb` // GTX 1070 8 GB
-- `geforcertx3060ti-pcie-8gb` // RTX 3060 8 GB
-- `geforcertx3090-pcie-24gb` // RTX 3090 24 GB
-- `geforcertx4090-pcie-24gb` // RTX 4090 24 GB
+**HPC**
+- `h100-sxm5-80gb` // H100 SXM5 80 GB
+- `a100-sxm4-80gb` // A100 SXM4 80 GB
+- `a100-pcie-80gb` // A100 PCIE 80 GB
 - `l40-pcie-48gb` // L 40 48GB
-- `rtxa4000-pcie-16gb` // RTX A4000 16 GB
-- `rtxa5000-pcie-24gb` // RTX A5000 24 GB
+- `v100-sxm2-16gb` // V100 SXM2 16 GB
+
+**Workstation**
 - `rtxa6000-pcie-48gb` // RTX A6000 48 GB
+- `rtxa5000-pcie-24gb` // RTX A5000 24 GB
+- `rtxa4000-pcie-16gb` // RTX A4000 16 GB
+- `quadrortx8000-pcie-48gb` // Quadro RTX 8000 48 GB
+
+**Consumer**
+- `geforcertx4090-pcie-24gb` // RTX 4090 24 GB
+- `geforcertx4080-pcie-16gb` // RTX 4080 16 GB
+- `geforcertx3090ti-pcie-24gb` // RTX 3090 Ti 24 GB
+- `geforcertx3090-pcie-24gb` // RTX 3090 24 GB
+- `geforcertx3060ti-pcie-8gb` // RTX 3060 Ti 8 GB
+- `geforcegtx1070-pcie-8gb` // GTX 1070 8 GB
+
 
 
 # Script Setup | Telegram Integration 📲
